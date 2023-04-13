@@ -6,19 +6,21 @@ namespace Programovani
     {
         static void Main(string[] args)
         {
-            // Sorting();
-            // Console.WriteLine(ApproxPi(0.00001));
-            // Console.WriteLine(ApproxSin(-1696.0, 0.0001));
-            // Console.WriteLine(ApproxCos(-100.0, 0.0001).ToString("F99").TrimEnd('0'));
-            // Console.WriteLine(ApproxSqrt(29.0, 3.0, 0.001));
-            // Console.WriteLine(DecimalToAny(308.3m, 3));
-            // Console.WriteLine(AnyToDecimal("102102", 3));
-            // FrequencyAnalyzer("AHOJ, JAK SE MAS, KAMARADE?");
-            // FileFrequencyAnalyzer("../../../Program.cs");
-            // Console.WriteLine(MorseEncode("Ahoj, jak se mas?"));
+            Sorting();
+            Console.WriteLine(ApproxPi(0.00001));
+            Console.WriteLine(ApproxSin(-1696.0, 0.0001));
+            Console.WriteLine(ApproxCos(-100.0, 0.0001).ToString("F99").TrimEnd('0'));
+            Console.WriteLine(ApproxSqrt(29.0, 3.0, 0.001));
+            Console.WriteLine(DecimalToAny(308.3m, 3));
+            Console.WriteLine(AnyToDecimal("102102", 3));
+            FrequencyAnalyzer("AHOJ, JAK SE MAS, KAMARADE?");
+            FileFrequencyAnalyzer("../../../Program.cs");
+            Console.WriteLine(MorseEncode("Ahoj, jak se mas?"));
             Console.WriteLine(MorseDecode(".-/..../---/.---//.---/.-/-.-//..././/--/.-/.../"));
-
-            // 
+            MatrixMultiplication();
+            MatrixDeterminant();
+            MatrixRotation();
+            Console.WriteLine(Euclide(140, 15));
         }
 
         static void Sorting()
@@ -26,12 +28,12 @@ namespace Programovani
             int[] array = { 17, 9, 1, 56, 9, 3, 0, 12 };
             // int[] array = { 17, 9, 1};
 
-            // InsertionSort(array);
-            // SelectionSort(array);
-            // BubbleSort(array);
-            // ShakerSort(array);
-            // QuickSort(array);
-            // HeapSort(array);
+            InsertionSort(array);
+            SelectionSort(array);
+            BubbleSort(array);
+            ShakerSort(array);
+            QuickSort(array);
+            HeapSort(array);
             MergeSort(array);
 
             Console.WriteLine(string.Join(", ", array));
@@ -423,25 +425,19 @@ namespace Programovani
 
             double angleRad = angleDeg * Math.PI / 180;
 
-            //
             angleRad = angleRad < 0 ? -angleRad : angleRad;
-
-            Console.WriteLine(angleRad);
 
             double circleAngle = angleRad;
             if (circleAngle > 2 * Math.PI)
                 circleAngle = circleAngle % (2 * Math.PI);
-            Console.WriteLine(circleAngle);
 
             double halfCircle = circleAngle;
             if (halfCircle > Math.PI)
                 halfCircle = (2 * Math.PI) - halfCircle;
-            Console.WriteLine(halfCircle);
 
             double quarterCircle = halfCircle;
             if (quarterCircle * 2 > Math.PI)
                 quarterCircle = Math.PI - quarterCircle;
-            Console.WriteLine(quarterCircle);
 
             double last;
             double cos = 0.0;
@@ -453,7 +449,6 @@ namespace Programovani
                 cos +=
                     ((double)Math.Pow(-1, n) * Math.Pow(quarterCircle, 2 * n))
                     / (double)Factorial(2 * n);
-                Console.WriteLine(cos);
                 n++;
             } while (Math.Abs(last - cos) > precision);
 
@@ -689,6 +684,211 @@ namespace Programovani
             }
 
             return result;
+        }
+
+        static void MatrixMultiplication()
+        {
+            static void PrintMatrix(int[,] m)
+            {
+                for (int i = 0; i < m.GetLength(0); i++)
+                {
+                    for (int j = 0; j < m.GetLength(1); j++)
+                    {
+                        Console.Write($"{m[i,j]}, ");
+                    }
+                    Console.Write("\n");
+                }
+            }
+            
+            int[,] a = new int[,]
+            {
+                { 1, 2, 3 },
+                { 4, 5, 6 },
+                { 7, 8, 9 },
+            };
+
+            int[,] b = new int[,]
+            {
+                { 8, 9 },
+                { -5, 4 },
+                { 10, -1 },
+            };
+
+            int[,] c = MultiplyMatrices(a, b);
+            
+            PrintMatrix(c);
+        }
+
+        /// <summary>
+        /// 17. Násobení matic
+        /// Čas: 13m40s
+        /// </summary>
+        /// <param name="a">Matice A</param>
+        /// <param name="b">Matice B</param>
+        /// <returns>Výsledná matice</returns>
+        static int[,] MultiplyMatrices(int[,] a, int[,] b)
+        {
+            // Definujeme si rozměry matic
+            int n = a.GetLength(0);
+            int m = a.GetLength(1);
+            int p = b.GetLength(1);
+            
+            // Výsledná matice
+            int[,] c = new int[n,p];
+
+            // Procházíme každý řádek v matici A
+            for (int radekA = 0; radekA < n; radekA++)
+            {
+                // Procházíme každý sloupec v matici B
+                for (int sloupecB = 0; sloupecB < p; sloupecB++)
+                {
+                    int item = 0;
+
+                    // Spočítáme hodnotu prvku ve výsledné matici
+                    for (int i = 0; i < m; i++)
+                        item += a[radekA, i] * b[i, sloupecB];
+
+                    c[radekA, sloupecB] = item;
+                }                
+            }
+
+            return c;
+        }
+
+        static void MatrixDeterminant()
+        {
+            int[,] matrix = new int[,]
+            {
+                {5, 7, 6, 8},
+                {1, 17, 4, 11},
+                {3, 10, 6, 9},
+                {6, 13, 1, 0},
+            };
+            
+            Console.WriteLine(Determinant(matrix));
+        }
+
+        /// <summary>
+        /// 18. Determinant matice
+        /// Čas: 28m3s
+        /// </summary>
+        /// <param name="matrix">Matice, jejíž determinant chceme určit</param>
+        /// <returns>Determinant matice</returns>
+        /// <exception cref="ArgumentException">Pokud není matice v rozměru nxn</exception>
+        static int Determinant(int[,] matrix)
+        {
+            if (matrix.GetLength(0) != matrix.GetLength(1))
+            {
+                string message = "Matice není v rozměru nxn";
+                Console.WriteLine(message);
+                throw new ArgumentException(message);
+            }
+
+            int size = matrix.GetLength(0);
+
+            // Spočítáme determinant pro různé rozměry matic
+            switch (size)
+            {
+                case 1:
+                    return matrix[0, 0];
+                case 2:
+                    return matrix[0, 0] * matrix[1, 1] - matrix[1, 0] * matrix[0, 1];
+                case 3: // Sarrusovo pravidlo
+                    return matrix[0,0] * matrix[1,1] * matrix[2,2] + matrix[0,1] * matrix[1,2] * matrix[2,0] + matrix[0,2] * matrix[1,0] * matrix[2,1]
+                           - matrix[0,2] * matrix[1,1] * matrix[2,0] - matrix[0,0] * matrix[1,2] * matrix[2,1] - matrix[0,1] * matrix[1,0] * matrix[2,2];
+                default: // Laplaceovo pravidlo
+                    int det = 0;
+                    for (int i = 0; i < size; i++)
+                    {
+                        // Vytvoří menší matici
+                        int[,] smallerMatrix = new int[size - 1, size - 1];
+                        for (int radek = 1; radek < size; radek++)
+                        {
+                            for (int sloupec = 0; sloupec < size; sloupec++)
+                            {
+                                if (sloupec != i)
+                                {
+                                    int smallSloupec = sloupec;
+                                    if (smallSloupec > i)
+                                        smallSloupec -= 1;
+                                    smallerMatrix[radek-1, smallSloupec] = matrix[radek,sloupec];
+                                }
+                            }
+                        }
+
+                        // Přidáme správně vynásobený determinant redukované matice k determinantu původní matice
+                        det += (int) Math.Pow(-1, i) * matrix[0,i] * Determinant(smallerMatrix);
+                    }
+
+                    return det;
+            }
+        }
+
+        static void MatrixRotation()
+        {
+            static void PrintMatrix(int[,] matrix)
+            {
+                for (int radek = 0; radek < matrix.GetLength(0); radek++)
+                {
+                    for (int sloupec = 0; sloupec < matrix.GetLength(1); sloupec++)
+                        Console.Write($"{matrix[radek, sloupec]}, ");
+                    Console.Write("\n");
+                }
+            }
+            
+            int[,] matrix = new int[,]
+            {
+                { 5, 7, 6 },
+                { 1, 17, 4 },
+                { 3, 8, 6 },
+                { 6, 13, 1 },
+            };
+
+            int[,] rotatedMatrix = RotateMatrix(matrix);
+
+            PrintMatrix(rotatedMatrix);
+        }
+
+        /// <summary>
+        /// 19. Rotace matice
+        /// Čas: 18m6s
+        /// </summary>
+        /// <param name="matrix">Matice</param>
+        /// <returns>Otočená matice</returns>
+        static int[,] RotateMatrix(int[,] matrix)
+        {
+            int rows = matrix.GetLength(0);
+            int columns = matrix.GetLength(1);
+
+            int[,] rotated = new int[columns, rows];
+            
+            // Překopíruje matrix s otočením o 90°
+            for (int radek = 0; radek < rows; radek++)
+            {
+                for (int sloupec = 0; sloupec < columns; sloupec++)
+                    rotated[sloupec, rows-1-radek] = matrix[radek, sloupec];
+            }
+
+            return rotated;
+        }
+
+        /// <summary>
+        /// 20. Euklidův algoritmus
+        /// Čas: 5m17s
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns>Největší společný dělitel čísel `a` a `b`</returns>
+        static int Euclide(int a, int b)
+        {
+            while (b > 0)
+            {
+                int tmp = a % b;
+                a = b;
+                b = tmp;
+            }
+
+            return a;
         }
     }
 }
